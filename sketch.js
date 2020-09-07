@@ -1,6 +1,6 @@
 //Create variables here
-var dog;
-var happyDog;
+var dogImg;
+var dogImg1;
 var foodStock;
 var foodS;
 var database;
@@ -16,8 +16,12 @@ function setup() {
   createCanvas(500, 500);
   database = firebase.database();
   console.log(database);
-  var dog = createSprite(200,200,20,20);
+  dog = createSprite(200,200,20,20);
   dog.addImage(dogImg);
+  dog.scale = 0.5;
+  textSize(20);
+  foodStock=database.ref('Food'); 
+  foodStock.on("value",readStock); 
 }
 
 
@@ -28,11 +32,17 @@ function draw() {
     writeStock(foodS);
     dog.addImage(dogImg1);
   }
-readStock();
-writeStock();
 
   drawSprites();
+
+  textSize(13);
+fill("black");
+stroke("pink");
+text("Note:Please Press the Up Arrow for feeding the dog ", 130,10,300,20);
+text("Food remaining : "+foodS,170,200); 
 }
+
+
 
 //function to read the values from database
 function readStock(data){
@@ -42,14 +52,10 @@ function writeStock(x){
   if (x <= 0){
     x = 0;
    } else{
-    x=x+1;
+    x=x-1;
   }
- /* textSize(30);
-  fill("black");
-  stroke("pink");
-  text("Note:Please Press the Up Arrow for feeding the dog ", 350,200);
-*/
-var foodS = database.ref('/').update({
+ 
+ database.ref('/').update({
   Food:x
 })
 };
